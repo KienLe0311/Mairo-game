@@ -85,7 +85,7 @@ public class GameView extends SurfaceView implements Runnable {
         if (obstacleX + obstacleBitmap.getWidth() < marioX && !scored) {
             score += 10;
             scored = true;
-            if (score % 50 == 0) {
+            if (score % 50 == 0 && level<10) {
                 level++;
                 editor.putInt("level", level);
                 editor.apply();
@@ -94,26 +94,35 @@ public class GameView extends SurfaceView implements Runnable {
         }
 
         // Xử lý khi hoàn thành cấp độ
-        if (score >= level * 100 && !levelCompleted) {
+        if (score >= level *100 && !levelCompleted) {
             levelCompleted = true;
             victorySound.start();
             new Handler(Looper.getMainLooper()).post(() -> {
                 new AlertDialog.Builder(getContext())
                         .setTitle("🎉 Hoàn thành Level " + level)
-                        .setMessage("Chúc mừng! Bạn đã vượt qua level " + level)
+                        .setMessage(level < 10
+                                ? "Chúc mừng! Bạn đã vượt qua level " + level
+                                : "Bạn đã đạt cấp độ tối đa và hoàn thành trò chơi!")
                         .setCancelable(false)
-                        .setPositiveButton("Chơi tiếp", (dialog, which) -> {
-                            level++;
-                            obstacleSpeed += 2;
-                            score = 0;
-                            editor.putInt("level", level);
-                            editor.apply();
-                            levelCompleted = false;
-                            obstacleX = getWidth();
+                        .setPositiveButton(level < 10 ? "Chơi tiếp" : "Kết thúc", (dialog, which) -> {
+                            if (level < 10) {
+                                // Tăng cấp độ và reset trạng thái cho level tiếp theo
+                                level++;
+                                obstacleSpeed += 2;
+                                score = 0;
+                                editor.putInt("level", level);
+                                editor.apply();
+                                levelCompleted = false;
+                                obstacleX = getWidth(); // Reset vị trí chướng ngại vật
+                            } else {
+                                // Kết thúc game khi đạt cấp độ tối đa
+                                isPlaying = false;
+                            }
                         })
                         .show();
             });
         }
+
         if (Rect.intersects(getRectMario(), getRectObstacle())) {
             isPlaying = false;
             new Handler(Looper.getMainLooper()).post(() -> {
