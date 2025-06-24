@@ -15,6 +15,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(this, GameActivity.class)));
 
         findViewById(R.id.btnHistory).setOnClickListener(v ->
-                startActivity(new Intent(this, HistroryActivity.class)));
+                startActivity(new Intent(this, HistoryActivity.class)));
     }
 }

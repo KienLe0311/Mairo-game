@@ -23,7 +23,7 @@
         <activity android:name=".GameActivity" />
 
         <!-- Khai báo HistoryActivity -->
-        <activity android:name=".HistroryActivity" />
+        <activity android:name=".HistoryActivity" />
 
     </application>
 

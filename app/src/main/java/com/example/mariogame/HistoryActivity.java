@@ -1,7 +1,5 @@
 package com.example.mariogame;
 
-import static com.example.mariogame.R.id.listView;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -12,17 +10,27 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-public class HistroryActivity extends AppCompatActivity {
+public class HistoryActivity extends AppCompatActivity {
     ListView listView;
     GameDatabaseHelper dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+
         listView = findViewById(R.id.listView);
+        if (listView == null) {
+            throw new RuntimeException("ListView with id 'listView' not found in activity_history.xml");
+        }
+
         dbHelper = new GameDatabaseHelper(this);
+        if (dbHelper == null) {
+            throw new RuntimeException("DatabaseHelper not initialized");
+        }
+
         showData();
     }
+
 
     private void showData() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
